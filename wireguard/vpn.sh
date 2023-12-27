@@ -1,7 +1,7 @@
 #!/bin/bash
 # OS: Ubuntu 22.04 LTS
 apt update
-apt install -y wireguard qrencode nftables nginx
+apt install -y wireguard qrencode nftables nginx net-tools
 sysctl -w net.ipv4.ip_forward=1
 sysctl -w net.ipv6.conf.all.forwarding=1
 wg genkey | tee /etc/wireguard/private.key
