@@ -4,6 +4,13 @@ apt update
 apt install -y wireguard qrencode nftables nginx net-tools
 sysctl -w net.ipv4.ip_forward=1
 sysctl -w net.ipv6.conf.all.forwarding=1
+systemctl disable systemd-resolved.service
+systemctl stop systemd-resolved 
+rm /etc/resolv.conf
+cat > /etc/resolv.conf <<EOL
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+EOL
 wg genkey | tee /etc/wireguard/private.key
 wg genkey | tee /etc/wireguard/private-client.key
 chmod go= /etc/wireguard/private.key
