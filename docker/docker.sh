@@ -9,4 +9,5 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.
 chmod a+r /etc/apt/keyrings/docker.gpg
 apt-get update
 apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-# usermod -aG docker ubuntu
+if [[ $(logname) != root ]]; then usermod -aG docker $(logname); fi # Add current user to docker group
+
