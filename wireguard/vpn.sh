@@ -1,5 +1,6 @@
 #!/bin/bash
 # OS: Ubuntu 22.04 LTS
+set -ex
 apt update
 apt install -y wireguard qrencode nftables nginx net-tools
 sysctl -w net.ipv4.ip_forward=1
@@ -41,7 +42,7 @@ EOL
 #ip link set up dev wg0
 
 # WireGuard Client Config
-cat > ~/wg-client.conf <<EOL2
+cat > ~/wg-client.conf <<EOL
 # define the local WireGuard interface (client)
 [Interface]
 
@@ -64,10 +65,11 @@ PublicKey = $(cat /etc/wireguard/public.key)
 AllowedIPs = 0.0.0.0/0, ::/0
 
 # public IP address and port of the WireGuard server
-Endpoint = $(ifconfig eth0 | grep 'inet ' | cut -d ' ' -f 10):51820
+# Endpoint = $(ifconfig eth0 | grep 'inet ' | cut -d ' ' -f 10):51820
+Endpoint = $PUBLIC_IP:51820
 
 PersistentKeepalive = 25
-EOL2
+EOL
 
 wg-quick up wg0
 wg show
