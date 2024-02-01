@@ -1,19 +1,4 @@
-## Requirements
-
-* Create an `.env` file on the same folder.
-
-Here is an example
+## Quick Start 
 ```
-# Azure DevOps PAT Token
-TOKEN=<token>
-# Azure DevOps Organization Name
-ORG_NAME=<org_name>
-URL=https://dev.azure.com/$ORG_NAME
-# Azure DevOps Agent Pool Name
-AGENT_POOL_NAME=onctl_pool
-# Azure DevOps Agent Name
-# AGENT_NAME=agent1
+onctl up -n agent1 -a azure/agent-pool.sh -e TOKEN=<Yout_PAT_token> -e AGENT_NAME=<unique_name> -e AGENT_POOL_NAME=<POOL_NAME> -e URL=https://dev.azure.com/<PROJECT_NAME>
 ```
-Don't forget to set your 
-* AzureDevOps PAT Token.
-* Organization Name
