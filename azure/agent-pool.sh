@@ -1,6 +1,9 @@
 #!/bin/bash
-# Create user ubuntu
-sudo useradd -m ubuntu -s /bin/bash
+# Create user ubuntu if needed 
+set -ex
+if ! id -u ubuntu > /dev/null 2>&1; then
+    sudo useradd -m ubuntu -s /bin/bash
+fi
 sudo -i -u ubuntu bash << EOF
 pwd
 mkdir myagent && cd myagent
@@ -11,7 +14,6 @@ cd /home/ubuntu/myagent
 # Install dependencies
 sudo ./bin/installdependencies.sh > /dev/null
 # AGENT_NAME=$(cat /dev/urandom | tr -dc '0-9' | fold -w 5 | head -n 1)
-AGENT_NAME=$(hostname)
 sudo -i -u ubuntu bash << EOF
 cd myagent
 pwd
@@ -20,7 +22,7 @@ EOF
 cd /home/ubuntu/myagent
 sudo ./svc.sh install ubuntu
 cd /home/ubuntu
-sudo systemctl start -a vsts* 
+set -f; sudo systemctl start -a vsts*; set +f 
 
 ## Install Azure CLI
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
