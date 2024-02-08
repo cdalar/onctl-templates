@@ -12,4 +12,4 @@ OR
 ```
 export KUBECONFIG=$PWD/k3s.yaml
 ```
-or directly set your KUBECONFIG
+to directly set your KUBECONFIG
