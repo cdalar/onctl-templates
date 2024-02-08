@@ -16,10 +16,10 @@ rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 grep -qxF 'export KUBECONFIG=/etc/rancher/k3s/k3s.yaml' ~/.bashrc || echo 'export KUBECONFIG=/etc/rancher/k3s/k3s.yaml' >> ~/.bashrc
 grep -qxF 'alias k=kubectl' ~/.bashrc || echo 'alias k=kubectl' >> ~/.bashrc
+cp /etc/rancher/k3s/k3s.yaml /tmp/k3s.yaml
+sed -i "s/127.0.0.1/${PUBLIC_IP}/g" /tmp/k3s.yaml
 
 # install cilium
 CILIUM_STABLE_VERSION=$(cilium version --client | grep stable | awk '{print $4}')
 cilium install --version $CILIUM_STABLE_VERSION
 cilium status --wait
-
-kubectl apply -f traefik-helm.yaml
