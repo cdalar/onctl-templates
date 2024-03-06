@@ -6,7 +6,7 @@
 This will create the vm, install k3s and download the kubeconfig file to you local. Then; 
 
 ```
-kubectl --context k3s.yaml get po -A
+kubectl --kubeconfig k3s.yaml get po -A
 ```
 OR 
 ```
