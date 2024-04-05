@@ -9,5 +9,5 @@ onctl up -n qwe -a docker/docker.sh
 ## run vm + install docker + deploy container
 
 ```
-onctl up -n qwe -a docker/docker.sh docker/nginx.sh
+onctl up -n qwe -a docker/docker.sh -a docker/nginx.sh
 ```
