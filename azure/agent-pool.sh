@@ -7,13 +7,14 @@ fi
 sudo -i -u ubuntu bash << EOF
 pwd
 mkdir myagent && cd myagent
-wget -q https://vstsagentpackage.azureedge.net/agent/3.232.3/vsts-agent-linux-x64-3.232.3.tar.gz
-tar zxf vsts-agent-linux-x64-3.232.3.tar.gz
+wget -q https://vstsagentpackage.azureedge.net/agent/3.236.1/vsts-agent-linux-x64-3.236.1.tar.gz
+tar zxf vsts-agent-linux-x64-3.236.1.tar.gz
 EOF
 cd /home/ubuntu/myagent
 # Install dependencies
 sudo ./bin/installdependencies.sh > /dev/null
 # AGENT_NAME=$(cat /dev/urandom | tr -dc '0-9' | fold -w 5 | head -n 1)
+AGENT_NAME=${AGENT_NAME:-$(hostname)} # Default to hostname if AGENT_NAME is not set
 sudo -i -u ubuntu bash << EOF
 cd myagent
 pwd
