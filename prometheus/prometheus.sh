@@ -14,7 +14,7 @@ EOF
 cat <<EOF > docker-compose.yml
 services:
   prometheus:
-    image: prom/prometheus:v2.34.0
+    image: prom/prometheus:v3.0.0
     container_name: prometheus
     network_mode: "host"
     ports:
