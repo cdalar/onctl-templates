@@ -1,12 +1,12 @@
 services:
   prometheus:
-    image: prom/prometheus:v2.34.0
+    image: prom/prometheus:latest
     container_name: prometheus
     network_mode: "host"
     ports:
       - "9090:9090"
     volumes:
-      - ${PWD}/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ~/prometheus.yml:/etc/prometheus/prometheus.yml
   grafana:
     image: grafana/grafana:8.4.4-ubuntu
     container_name: grafana
