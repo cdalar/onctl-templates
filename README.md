@@ -2,7 +2,7 @@
 
 [**onctl**](https://github.com/cdalar/onctl) is a tool to manage virtual machines in multi-cloud. 
 
-Check 🌍 https://onctl.com for detailed documentation
+Check 🌍 https://docs.onctl.io for detailed documentation
 
 [![Github All Releases](https://img.shields.io/github/downloads/cdalar/onctl/total.svg)]()
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/cdalar/onctl?sort=semver)
