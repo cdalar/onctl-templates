@@ -1,0 +1,25 @@
+apiVersion: v1
+templates:
+  - name: k3s
+    version: 1.0.0
+    description: Deploys a K3s server instance.
+    path: k3s/k3s-server.sh
+    tags:
+      - k3s
+      - kubernetes
+      - server
+  - name: docker
+    version: 1.0.0
+    description: Installs Docker on the VM.
+    path: docker/docker.sh
+    tags:
+      - docker
+      - container
+  - name: minio
+    version: 1.0.0
+    description: Sets up a MinIO storage server.
+    path: minio/docker.sh
+    tags:
+      - minio
+      - storage
+      - s3
