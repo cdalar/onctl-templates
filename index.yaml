@@ -23,3 +23,52 @@ templates:
       - minio
       - storage
       - s3
+  - name: ollama
+    version: 1.0.0
+    description: Sets up Ollama with Open WebUI for AI model management.
+    path: ollama/open-webui-ollama.sh
+    tags:
+      - ollama
+      - ai
+      - llm
+      - webui
+  - name: rke2
+    version: 1.0.0
+    description: Installs and configures RKE2 Kubernetes distribution.
+    path: rke2/rke2.sh
+    tags:
+      - rke2
+      - kubernetes
+      - rancher
+  - name: node
+    version: 1.0.0
+    description: Installs Node.js using NVM (Node Version Manager).
+    path: node/node.sh
+    tags:
+      - nodejs
+      - javascript
+      - nvm
+  - name: nginx
+    version: 1.0.0
+    description: Sets up Nginx web server.
+    path: nginx/nginx.sh
+    tags:
+      - nginx
+      - webserver
+      - proxy
+  - name: wireguard
+    version: 1.0.0
+    description: Configures WireGuard VPN server.
+    path: wireguard/wireguard.sh
+    tags:
+      - wireguard
+      - vpn
+      - networking
+  - name: cloud-init
+    version: 1.0.0
+    description: Provides cloud-init configuration templates.
+    path: cloud-init/cloud-init.sh
+    tags:
+      - cloud-init
+      - cloud
+      - initialization
