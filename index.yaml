@@ -3,7 +3,7 @@ templates:
   - name: k3s
     version: 1.0.0
     description: Deploys a K3s server instance.
-    path: k3s/k3s-server.sh
+    config: k3s/k3s-server.sh
     tags:
       - k3s
       - kubernetes
@@ -11,14 +11,14 @@ templates:
   - name: docker
     version: 1.0.0
     description: Installs Docker on the VM.
-    path: docker/docker.sh
+    config: docker/docker.sh
     tags:
       - docker
       - container
   - name: minio
     version: 1.0.0
     description: Sets up a MinIO storage server.
-    path: minio/docker.sh
+    config: minio/docker.sh
     tags:
       - minio
       - storage
@@ -26,7 +26,7 @@ templates:
   - name: ollama
     version: 1.0.0
     description: Sets up Ollama with Open WebUI for AI model management.
-    path: ollama/open-webui-ollama.sh
+    config: ollama/open-webui-ollama.sh
     tags:
       - ollama
       - ai
@@ -35,7 +35,7 @@ templates:
   - name: rke2
     version: 1.0.0
     description: Installs and configures RKE2 Kubernetes distribution.
-    path: rke2/rke2.sh
+    config: rke2/rke2.sh
     tags:
       - rke2
       - kubernetes
@@ -43,7 +43,7 @@ templates:
   - name: node
     version: 1.0.0
     description: Installs Node.js using NVM (Node Version Manager).
-    path: node/node.sh
+    config: node/node.sh
     tags:
       - nodejs
       - javascript
@@ -51,7 +51,7 @@ templates:
   - name: nginx
     version: 1.0.0
     description: Sets up Nginx web server.
-    path: nginx/nginx.sh
+    config: nginx/nginx.sh
     tags:
       - nginx
       - webserver
@@ -59,7 +59,7 @@ templates:
   - name: wireguard
     version: 1.0.0
     description: Configures WireGuard VPN server.
-    path: wireguard/wireguard.sh
+    config: wireguard/wireguard.sh
     tags:
       - wireguard
       - vpn
@@ -67,7 +67,7 @@ templates:
   - name: cloud-init
     version: 1.0.0
     description: Provides cloud-init configuration templates.
-    path: cloud-init/cloud-init.sh
+    config: cloud-init/cloud-init.sh
     tags:
       - cloud-init
       - cloud
