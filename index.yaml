@@ -1,0 +1,74 @@
+apiVersion: v1
+templates:
+  - name: k3s
+    version: 1.0.0
+    description: Deploys a K3s server instance.
+    config: k3s/k3s-server.sh
+    tags:
+      - k3s
+      - kubernetes
+      - server
+  - name: docker
+    version: 1.0.0
+    description: Installs Docker on the VM.
+    config: docker/docker.sh
+    tags:
+      - docker
+      - container
+  - name: minio
+    version: 1.0.0
+    description: Sets up a MinIO storage server.
+    config: minio/docker.sh
+    tags:
+      - minio
+      - storage
+      - s3
+  - name: ollama
+    version: 1.0.0
+    description: Sets up Ollama with Open WebUI for AI model management.
+    config: ollama/open-webui-ollama.sh
+    tags:
+      - ollama
+      - ai
+      - llm
+      - webui
+  - name: rke2
+    version: 1.0.0
+    description: Installs and configures RKE2 Kubernetes distribution.
+    config: rke2/rke2.sh
+    tags:
+      - rke2
+      - kubernetes
+      - rancher
+  - name: node
+    version: 1.0.0
+    description: Installs Node.js using NVM (Node Version Manager).
+    config: node/node.sh
+    tags:
+      - nodejs
+      - javascript
+      - nvm
+  - name: nginx
+    version: 1.0.0
+    description: Sets up Nginx web server.
+    config: nginx/nginx.sh
+    tags:
+      - nginx
+      - webserver
+      - proxy
+  - name: wireguard
+    version: 1.0.0
+    description: Configures WireGuard VPN server.
+    config: wireguard/wireguard.sh
+    tags:
+      - wireguard
+      - vpn
+      - networking
+  - name: cloud-init
+    version: 1.0.0
+    description: Provides cloud-init configuration templates.
+    config: cloud-init/cloud-init.sh
+    tags:
+      - cloud-init
+      - cloud
+      - initialization
