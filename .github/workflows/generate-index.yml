@@ -61,8 +61,13 @@ jobs:
       run: |
         if git diff --quiet index.yaml; then
           echo "changed=false" >> $GITHUB_OUTPUT
+          echo "No changes detected in index.yaml"
         else
           echo "changed=true" >> $GITHUB_OUTPUT
+          echo "Changes detected in index.yaml:"
+          echo "----------------------------------------"
+          git diff index.yaml
+          echo "----------------------------------------"
         fi
         
     - name: Upload generated index.yaml as artifact
@@ -91,5 +96,18 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: '🤖 **Auto-generated index.yaml changes detected**\n\nThe `index.yaml` file will be updated automatically when this PR is merged. You can review the changes in the workflow artifacts.'
+            body: `🤖 **Auto-generated index.yaml changes detected**
+            
+            The \`index.yaml\` file will be updated automatically when this PR is merged.
+            
+            📋 **How to review the changes:**
+            1. Check the workflow run details above
+            2. Look at the "Check for changes" step output to see the diff
+            3. Download the \`generated-index-yaml\` artifact to see the full file
+            
+            🔗 **Quick links:**
+            - [Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            - [Generated artifact](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)
+            
+            The changes will be automatically committed when this PR is merged to the main branch.`
           })
