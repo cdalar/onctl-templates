@@ -1,0 +1,113 @@
+name: Generate Index YAML
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - '*/**.sh'
+      - '*/**.yaml'
+      - '*/**.yml'
+      - '*/**.config'
+      - '*/**.toml'
+      - '**/README.md'
+      - '.github/workflows/generate-index.yml'
+      - '.github/scripts/*.py'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - '*/**.sh'
+      - '*/**.yaml'
+      - '*/**.yml'
+      - '*/**.config'
+      - '*/**.toml'
+      - '**/README.md'
+      - '.github/workflows/generate-index.yml'
+      - '.github/scripts/*.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate-index:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        ref: ${{ github.head_ref || github.ref_name }}
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyyaml
+        
+    - name: Generate index.yaml
+      run: python .github/scripts/generate_index.py
+      
+    - name: Validate index.yaml
+      run: python .github/scripts/validate_index.py
+      
+    - name: Check for changes
+      id: changes
+      run: |
+        if git diff --quiet index.yaml; then
+          echo "changed=false" >> $GITHUB_OUTPUT
+          echo "No changes detected in index.yaml"
+        else
+          echo "changed=true" >> $GITHUB_OUTPUT
+          echo "Changes detected in index.yaml:"
+          echo "----------------------------------------"
+          git diff index.yaml
+          echo "----------------------------------------"
+        fi
+        
+    - name: Upload generated index.yaml as artifact
+      if: steps.changes.outputs.changed == 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: generated-index-yaml
+        path: index.yaml
+        retention-days: 30
+        
+    - name: Commit and push changes
+      if: steps.changes.outputs.changed == 'true' && github.event_name == 'push'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add index.yaml
+        git commit -m "Auto-update index.yaml [skip ci]"
+        git push origin HEAD:${{ github.ref_name }}
+        
+    - name: Comment on PR with changes
+      if: steps.changes.outputs.changed == 'true' && github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `🤖 **Auto-generated index.yaml changes detected**
+            
+            The \`index.yaml\` file will be updated automatically when this PR is merged.
+            
+            📋 **How to review the changes:**
+            1. Check the workflow run details above
+            2. Look at the "Check for changes" step output to see the diff
+            3. Download the \`generated-index-yaml\` artifact to see the full file
+            
+            🔗 **Quick links:**
+            - [Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            - [Generated artifact](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)
+            
+            The changes will be automatically committed when this PR is merged to the main branch.`
+          })
