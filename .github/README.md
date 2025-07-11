@@ -14,6 +14,11 @@ The workflow automatically runs when:
 - The workflow or generation scripts are modified
 - Manually triggered via `workflow_dispatch`
 
+**Branch Protection Handling:**
+- If branch protection is enabled, the workflow creates a pull request with the updated `index.yaml`
+- If no branch protection, it commits directly to the target branch
+- This ensures compatibility with different repository protection levels
+
 ### 2. Python Scripts
 
 #### `generate_index.py`
