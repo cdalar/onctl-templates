@@ -78,14 +78,27 @@ jobs:
         path: index.yaml
         retention-days: 30
         
-    - name: Commit and push changes
+    - name: Create Pull Request with changes
       if: steps.changes.outputs.changed == 'true' && github.event_name == 'push'
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add index.yaml
-        git commit -m "Auto-update index.yaml [skip ci]"
-        git push origin HEAD:${{ github.ref_name }}
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: "Auto-update index.yaml [skip ci]"
+        title: "🤖 Auto-update index.yaml"
+        body: |
+          This PR was automatically created to update the `index.yaml` file based on repository changes.
+          
+          **What changed:**
+          - Template configurations updated from directory structure
+          - Generated from latest script files and README descriptions
+          
+          **Generated templates:** 
+          The workflow detected changes in template files and regenerated the index.
+          
+          This PR can be merged automatically to keep the index.yaml in sync with the repository structure.
+        branch: auto-update-index
+        delete-branch: true
+        base: ${{ github.ref_name }}
         
     - name: Comment on PR with changes
       if: steps.changes.outputs.changed == 'true' && github.event_name == 'pull_request'
@@ -98,7 +111,7 @@ jobs:
             repo: context.repo.repo,
             body: `🤖 **Auto-generated index.yaml changes detected**
             
-            The \`index.yaml\` file will be updated automatically when this PR is merged.
+            The \`index.yaml\` file will be updated when this PR is merged. Since this repository has branch protection enabled, changes will be applied via an automated pull request after merge.
             
             📋 **How to review the changes:**
             1. Check the workflow run details above
@@ -109,5 +122,5 @@ jobs:
             - [Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
             - [Generated artifact](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)
             
-            The changes will be automatically committed when this PR is merged to the main branch.`
+            After this PR is merged, an automated PR will be created to update the index.yaml file.`
           })
