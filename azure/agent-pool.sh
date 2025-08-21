@@ -1,4 +1,4 @@
-#!/bin/bash
+ #!/bin/bash
 # Create user ubuntu if needed 
 set -ex
 if ! id -u ubuntu > /dev/null 2>&1; then
@@ -6,9 +6,9 @@ if ! id -u ubuntu > /dev/null 2>&1; then
 fi
 sudo -i -u ubuntu bash << EOF
 pwd
-mkdir myagent && cd myagent
-wget -q https://vstsagentpackage.azureedge.net/agent/3.236.1/vsts-agent-linux-x64-3.236.1.tar.gz
-tar zxf vsts-agent-linux-x64-3.236.1.tar.gz
+mkdir -p myagent && cd myagent
+wget -q https://download.agent.dev.azure.com/agent/4.260.0/vsts-agent-linux-x64-4.260.0.tar.gz
+tar zxf vsts-agent-linux-x64-4.260.0.tar.gz
 EOF
 cd /home/ubuntu/myagent
 # Install dependencies
