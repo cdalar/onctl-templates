@@ -51,22 +51,6 @@ templates:
   tags:
   - docker
   - container
-- name: frp
-  version: 1.0.0
-  description: Fast Reverse Proxy (FRP) client and server setup.
-  config: frp/frpc.sh
-  tags:
-  - frp
-  - proxy
-  - networking
-- name: harbor
-  version: 1.0.0
-  description: Harbor container registry deployment.
-  config: harbor/harbor.sh
-  tags:
-  - harbor
-  - registry
-  - container
 - name: k3s
   version: 1.0.0
   description: Deploys a K3s server instance.
