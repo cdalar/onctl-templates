@@ -85,6 +85,11 @@ TEMPLATE_CONFIGS = {
         'preferred_script': 'harbor.sh',
         'description': 'Harbor container registry deployment.',
         'tags': ['harbor', 'registry', 'container']
+    },
+    'rustfs': {
+        'preferred_script': 'rustfs.sh',
+        'description': 'Deploys RustFS object storage using the official Docker image.',
+        'tags': ['rustfs', 'object-storage', 's3']
     }
 }
 
