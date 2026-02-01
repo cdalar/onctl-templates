@@ -51,6 +51,13 @@ templates:
   tags:
   - docker
   - container
+- name: hcloud
+  version: 1.0.0
+  description: Configuration and setup scripts for hcloud.
+  config: hcloud/k3s-ccm.sh
+  tags:
+  - hcloud
+  - cloud
 - name: k3s
   version: 1.0.0
   description: Deploys a K3s server instance.
