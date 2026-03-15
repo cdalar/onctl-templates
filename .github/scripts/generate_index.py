@@ -90,6 +90,11 @@ TEMPLATE_CONFIGS = {
         'preferred_script': 'rustfs.sh',
         'description': 'Deploys RustFS object storage using the official Docker image.',
         'tags': ['rustfs', 'object-storage', 's3']
+    },
+    'supabase': {
+        'preferred_script': 'supabase.sh',
+        'description': 'Self-hosted Supabase backend-as-a-service (Postgres, Auth, Storage, Realtime, Studio).',
+        'tags': ['supabase', 'postgres', 'backend', 'database', 'auth']
     }
 }
 
