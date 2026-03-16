@@ -53,7 +53,7 @@ But, it can be configured with the certname parameter in Puppet.
 Setting the certname to a different value than the fqdn hostname won't break the certificate when the fqdn is changed,
 or the VM is deleted and the hostname and/or IP number is re-used by the cloud provider.
 Template procedure
-1.    Obtain the first 8 numbers of the servers swap UUID and use it with the hostname as a unique identifier for the certificate name
+1.    Generate a UUID (for example using `uuidgen`) and use the first 8 characters together with the hostname as a unique identifier for the certificate name
 2.    Create a csr attributes file and set the values for the certificate to identify the server
 3.    Install Puppet Agent repositories and install the Puppet Agent from a package
 4.    Set values in puppet.conf
