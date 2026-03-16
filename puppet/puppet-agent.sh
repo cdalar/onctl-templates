@@ -101,7 +101,11 @@ case $ID in
     ;;
 esac
 
-ln -s /opt/puppetlabs/bin/puppet /usr/local/bin/
+if ! command -v puppet >/dev/null 2>&1; then
+  if [ ! -e /usr/local/bin/puppet ]; then
+    ln -s /opt/puppetlabs/bin/puppet /usr/local/bin/puppet
+  fi
+fi
 
 if [ ! -d /etc/puppetlabs/puppet ]; then
   mkdir -p /etc/puppetlabs/puppet
