@@ -78,7 +78,7 @@ set_hosts_file() {
 
 . /etc/os-release
 case $ID in
-  amzn|rocky|almalinux|rhel|ubuntu)
+  amzn|centos|rocky|almalinux|rhel|ubuntu)
    set_hosts_file
    if [ "$ID" == "ubuntu" ];then
      DIST=$(lsb_release -c | awk '{print $2}')
