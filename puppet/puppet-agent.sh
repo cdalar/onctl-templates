@@ -49,6 +49,12 @@ list_usage() {
 	set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
   fi
 
+# Ensure MASTER and MASTERIP are set either via environment variables or command-line arguments
+if [[ -z "$MASTER" || -z "$MASTERIP" ]]; then
+	echo "Error: MASTER and MASTERIP must be specified."
+	list_usage
+	exit 3
+fi
 
 sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
 sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
