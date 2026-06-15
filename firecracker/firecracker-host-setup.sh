@@ -29,13 +29,13 @@ mkdir -p ~/.onctl/firecracker/images
 cd ~/.onctl/firecracker/images
 
 CI_VERSION="v1.10"
-kernel_key=$(curl -fsSL "https://spec.ccfc.min.s3.amazonaws.com/?prefix=firecracker-ci/${CI_VERSION}/${ARCH}/vmlinux-5.10&list-type=2" \
+kernel_key=$(curl -fsSL "https://s3.amazonaws.com/spec.ccfc.min/?prefix=firecracker-ci/${CI_VERSION}/${ARCH}/vmlinux-5.10&list-type=2" \
   | grep -oP "(?<=<Key>)(firecracker-ci/${CI_VERSION}/${ARCH}/vmlinux-5\.10\.[0-9]+)(?=</Key>)" \
   | sort -V | tail -1)
 curl -fsSL "https://s3.amazonaws.com/spec.ccfc.min/${kernel_key}" -o vmlinux
 
-rootfs_key=$(curl -fsSL "https://spec.ccfc.min.s3.amazonaws.com/?prefix=firecracker-ci/${CI_VERSION}/${ARCH}/ubuntu-24.04.ext4&list-type=2" \
-  | grep -oP "(?<=<Key>)(firecracker-ci/${CI_VERSION}/${ARCH}/ubuntu-24\.04\.ext4)(?=</Key>)" \
+rootfs_key=$(curl -fsSL "https://s3.amazonaws.com/spec.ccfc.min/?prefix=firecracker-ci/${CI_VERSION}/${ARCH}/ubuntu-22.04.ext4&list-type=2" \
+  | grep -oP "(?<=<Key>)(firecracker-ci/${CI_VERSION}/${ARCH}/ubuntu-22\.04\.ext4)(?=</Key>)" \
   | sort -V | tail -1)
 curl -fsSL "https://s3.amazonaws.com/spec.ccfc.min/${rootfs_key}" -o rootfs.ext4
 
