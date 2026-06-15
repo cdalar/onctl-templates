@@ -51,6 +51,12 @@ templates:
   tags:
   - docker
   - container
+- name: firecracker
+  version: 1.0.0
+  description: Configuration and setup scripts for firecracker.
+  config: firecracker/firecracker-host-setup.sh
+  tags:
+  - firecracker
 - name: github-runner
   version: 1.0.0
   description: Registers an ephemeral self-hosted GitHub Actions runner.
