@@ -51,6 +51,15 @@ templates:
   tags:
   - docker
   - container
+- name: github-runner
+  version: 1.0.0
+  description: Registers an ephemeral self-hosted GitHub Actions runner.
+  config: github-runner/github-runner.sh
+  tags:
+  - github
+  - github-actions
+  - ci
+  - runner
 - name: hcloud
   version: 1.0.0
   description: Configuration and setup scripts for hcloud.
