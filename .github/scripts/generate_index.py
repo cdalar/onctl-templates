@@ -96,6 +96,11 @@ TEMPLATE_CONFIGS = {
         'description': 'Self-hosted Supabase backend-as-a-service (Postgres, Auth, Storage, Realtime, Studio).',
         'tags': ['supabase', 'postgres', 'backend', 'database', 'auth']
     },
+    'github-runner': {
+        'preferred_script': 'github-runner.sh',
+        'description': 'Registers an ephemeral self-hosted GitHub Actions runner.',
+        'tags': ['github', 'github-actions', 'ci', 'runner']
+    },
     'github-runner-jit': {
         'preferred_script': 'github-runner-jit.sh',
         'description': 'Registers an ephemeral self-hosted GitHub Actions runner using a just-in-time (JIT) config.',
