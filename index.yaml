@@ -51,6 +51,16 @@ templates:
   tags:
   - docker
   - container
+- name: github-runner-jit
+  version: 1.0.0
+  description: Registers an ephemeral self-hosted GitHub Actions runner using a just-in-time (JIT) config.
+  config: github-runner-jit/github-runner-jit.sh
+  tags:
+  - github
+  - github-actions
+  - ci
+  - runner
+  - jit
 - name: hcloud
   version: 1.0.0
   description: Configuration and setup scripts for hcloud.
