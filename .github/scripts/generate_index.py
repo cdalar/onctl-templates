@@ -100,6 +100,11 @@ TEMPLATE_CONFIGS = {
         'preferred_script': 'github-runner.sh',
         'description': 'Registers an ephemeral self-hosted GitHub Actions runner.',
         'tags': ['github', 'github-actions', 'ci', 'runner']
+    },
+    'github-runner-jit': {
+        'preferred_script': 'github-runner-jit.sh',
+        'description': 'Registers an ephemeral self-hosted GitHub Actions runner using a just-in-time (JIT) config.',
+        'tags': ['github', 'github-actions', 'ci', 'runner', 'jit']
     }
 }
 
