@@ -16,6 +16,11 @@ TEMPLATE_CONFIGS = {
         'description': 'Deploys a K3s server instance.',
         'tags': ['k3s', 'kubernetes', 'server']
     },
+    'k3s-fc': {
+        'preferred_script': 'k3s-server.sh',
+        'description': 'Deploys a K3s server instance on Firecracker microVMs (flannel host-gw backend, no VXLAN needed).',
+        'tags': ['k3s', 'kubernetes', 'server', 'firecracker']
+    },
     'docker': {
         'preferred_script': 'docker.sh',
         'description': 'Installs Docker on the VM.',
