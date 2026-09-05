@@ -44,6 +44,15 @@ templates:
   - coder
   - development
   - environment
+- name: desktop
+  version: 1.0.0
+  description: Installs an XFCE desktop and TigerVNC server for graphical access to the VM.
+  config: desktop/xfce-vnc.sh
+  tags:
+  - desktop
+  - gui
+  - vnc
+  - xfce
 - name: docker
   version: 1.0.0
   description: Installs Docker on the VM.
@@ -51,6 +60,12 @@ templates:
   tags:
   - docker
   - container
+- name: firecracker
+  version: 1.0.0
+  description: Configuration and setup scripts for firecracker.
+  config: firecracker/firecracker-host-setup.sh
+  tags:
+  - firecracker
 - name: github-runner
   version: 1.0.0
   description: Registers an ephemeral self-hosted GitHub Actions runner.
@@ -85,6 +100,15 @@ templates:
   - k3s
   - kubernetes
   - server
+- name: k3s-fc
+  version: 1.0.0
+  description: Deploys a K3s server instance on Firecracker microVMs (flannel host-gw backend, no VXLAN needed).
+  config: k3s-fc/k3s-server.sh
+  tags:
+  - k3s
+  - kubernetes
+  - server
+  - firecracker
 - name: minio
   version: 1.0.0
   description: Sets up a MinIO storage server.
