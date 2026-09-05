@@ -46,18 +46,23 @@ else
   VNC_SECURITY_ARGS="-SecurityTypes None"
 fi
 
+# Type=simple + -fg (not Type=forking + PIDFile): TigerVNC's own
+# double-fork-and-write-a-pidfile path is unreliable under systemd here --
+# tested and reproduced live: systemd reported "Can't open PID file
+# .../qwe:1.pid (yet?): Operation not permitted" and killed/flapped the
+# unit even though the VNC server itself had started fine. -fg keeps
+# vncserver in the foreground so systemd supervises the real process
+# directly, no PID file involved.
 cat <<EOF > "/etc/systemd/system/vncserver@.service"
 [Unit]
 Description=TigerVNC server on display %i
 After=network.target
 
 [Service]
-Type=forking
+Type=simple
 User=${VNC_USER}
 WorkingDirectory=${VNC_HOME}
-PIDFile=${VNC_HOME}/.vnc/%H:%i.pid
-ExecStartPre=-/usr/bin/vncserver -kill :%i
-ExecStart=/usr/bin/vncserver -localhost yes ${VNC_SECURITY_ARGS} :%i
+ExecStart=/usr/bin/vncserver -fg -localhost yes ${VNC_SECURITY_ARGS} :%i
 ExecStop=/usr/bin/vncserver -kill :%i
 Restart=on-failure
 
