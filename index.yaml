@@ -44,6 +44,15 @@ templates:
   - coder
   - development
   - environment
+- name: desktop
+  version: 1.0.0
+  description: Installs an XFCE desktop and TigerVNC server for graphical access to the VM.
+  config: desktop/xfce-vnc.sh
+  tags:
+  - desktop
+  - gui
+  - vnc
+  - xfce
 - name: docker
   version: 1.0.0
   description: Installs Docker on the VM.

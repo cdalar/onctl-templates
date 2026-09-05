@@ -110,6 +110,11 @@ TEMPLATE_CONFIGS = {
         'preferred_script': 'github-runner-jit.sh',
         'description': 'Registers an ephemeral self-hosted GitHub Actions runner using a just-in-time (JIT) config.',
         'tags': ['github', 'github-actions', 'ci', 'runner', 'jit']
+    },
+    'desktop': {
+        'preferred_script': 'xfce-vnc.sh',
+        'description': 'Installs an XFCE desktop and TigerVNC server for graphical access to the VM.',
+        'tags': ['desktop', 'gui', 'vnc', 'xfce']
     }
 }
 
