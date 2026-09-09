@@ -40,7 +40,7 @@ rootfs_key=$(curl -fsSL "https://s3.amazonaws.com/spec.ccfc.min/?prefix=firecrac
 curl -fsSL "https://s3.amazonaws.com/spec.ccfc.min/${rootfs_key}" -o rootfs.ext4
 
 # Install onctl itself so microVMs can be managed from this host.
-curl -sLS https://docs.onctl.io/get.sh | bash
+curl -fsSL https://onctl.sh/get.sh | bash
 install onctl /usr/local/bin/
 
 echo "Firecracker host setup complete."

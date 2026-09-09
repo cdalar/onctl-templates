@@ -57,6 +57,13 @@ templates:
   config: firecracker/firecracker-host-setup.sh
   tags:
   - firecracker
+- name: cloud-hypervisor
+  version: 1.0.0
+  description: Configuration and setup scripts for the Cloud Hypervisor (ch) provider, including Windows guest prerequisites.
+  config: cloud-hypervisor/cloud-hypervisor-host-setup.sh
+  tags:
+  - cloud-hypervisor
+  - windows
 - name: github-runner
   version: 1.0.0
   description: Registers an ephemeral self-hosted GitHub Actions runner.
