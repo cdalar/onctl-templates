@@ -20,6 +20,13 @@ templates:
   - azure
   - cloud
   - deployment
+- name: cloud-hypervisor
+  version: 1.0.0
+  description: Configuration and setup scripts for cloud-hypervisor.
+  config: cloud-hypervisor/cloud-hypervisor-host-setup.sh
+  tags:
+  - cloud-hypervisor
+  - cloud
 - name: cloud-init
   version: 1.0.0
   description: Provides cloud-init configuration templates.
@@ -57,13 +64,6 @@ templates:
   config: firecracker/firecracker-host-setup.sh
   tags:
   - firecracker
-- name: cloud-hypervisor
-  version: 1.0.0
-  description: Configuration and setup scripts for the Cloud Hypervisor (ch) provider, including Windows guest prerequisites.
-  config: cloud-hypervisor/cloud-hypervisor-host-setup.sh
-  tags:
-  - cloud-hypervisor
-  - windows
 - name: github-runner
   version: 1.0.0
   description: Registers an ephemeral self-hosted GitHub Actions runner.
@@ -140,6 +140,15 @@ templates:
   - ai
   - llm
   - webui
+- name: rancher
+  version: 1.0.0
+  description: Rancher management (local) cluster on single-node k3s with cert-manager.
+  config: rancher/rancher-local.sh
+  tags:
+  - rancher
+  - kubernetes
+  - k3s
+  - management
 - name: rke2
   version: 1.0.0
   description: Installs and configures RKE2 Kubernetes distribution.
