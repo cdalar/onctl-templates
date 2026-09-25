@@ -36,6 +36,11 @@ TEMPLATE_CONFIGS = {
         'description': 'Sets up Ollama with Open WebUI for AI model management.',
         'tags': ['ollama', 'ai', 'llm', 'webui']
     },
+    'rancher': {
+        'preferred_script': 'rancher-local.sh',
+        'description': 'Rancher management (local) cluster on single-node k3s with cert-manager.',
+        'tags': ['rancher', 'kubernetes', 'k3s', 'management']
+    },
     'rke2': {
         'preferred_script': 'rke2.sh',
         'description': 'Installs and configures RKE2 Kubernetes distribution.',
