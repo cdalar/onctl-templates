@@ -1,0 +1,97 @@
+name: Pages
+
+# Builds templates.onctl.com and deploys it with GitHub Pages.
+#
+# The site is built with the same Jekyll setup as the old branch-based Pages
+# build, so every URL keeps working, and index.yaml is generated from the
+# template manifests at build time.
+#
+# Deploying only happens when Settings -> Pages -> Source is "GitHub Actions";
+# until then the deploy job is skipped. PRs only build.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: pages-${{ github.event_name == 'pull_request' && github.head_ref || 'deploy' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read       # look up the Pages source
+    outputs:
+      pages_source: ${{ steps.source.outputs.build_type }}
+    steps:
+    - name: Check Pages source
+      id: source
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        # Fork PRs may not be allowed to read this; they never deploy anyway.
+        build_type=$(gh api "repos/${{ github.repository }}/pages" -q .build_type 2>/dev/null) || build_type=unknown
+        echo "build_type=$build_type" >> "$GITHUB_OUTPUT"
+        if [ "$build_type" != workflow ]; then
+          echo "::notice::Pages source is '$build_type', not 'GitHub Actions'; the site is built but not deployed."
+        fi
+
+    - name: Checkout repository
+      uses: actions/checkout@v5
+
+    - name: Install dependencies
+      run: python3 -m pip install --user pyyaml
+
+    - name: Generate index.yaml
+      run: python3 .github/scripts/generate_index.py
+
+    - name: Build with Jekyll
+      uses: actions/jekyll-build-pages@v1
+      with:
+        source: ./
+        destination: ./_site
+
+    - name: Check site contents
+      run: |
+        # onctl fetches index.yaml and templates by path; fail if any is missing.
+        test -f _site/index.yaml
+        python3 - <<'EOF'
+        import os, sys, yaml
+        index = yaml.safe_load(open('_site/index.yaml'))
+        paths = [t['config'] for t in index['templates']]
+        paths += [f['path'] for t in index['templates'] for f in t.get('files', [])]
+        missing = [p for p in paths if not os.path.isfile(os.path.join('_site', p))]
+        for p in missing:
+            print(f"::error::{p} is listed in index.yaml but missing from the built site")
+        print(f"{len(paths) - len(missing)}/{len(paths)} template files present")
+        sys.exit(1 if missing else 0)
+        EOF
+
+    - name: Upload site artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./_site
+
+  deploy:
+    name: Deploy
+    if: github.event_name != 'pull_request' && needs.build.outputs.pages_source == 'workflow'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write      # deploy to Pages
+      id-token: write   # verify the deployment originates from this workflow
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
