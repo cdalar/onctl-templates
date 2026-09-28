@@ -21,6 +21,21 @@ TEMPLATE_CONFIGS = {
         'description': 'Deploys a K3s server instance on Firecracker microVMs (flannel host-gw backend, no VXLAN needed).',
         'tags': ['k3s', 'kubernetes', 'server', 'firecracker']
     },
+    'firecracker': {
+        'preferred_script': 'firecracker-host-setup.sh',
+        'description': 'Prepares a KVM-capable VM to host Firecracker microVMs (with IP forwarding and NAT).',
+        'tags': ['firecracker', 'microvm', 'kvm']
+    },
+    'cloud-hypervisor': {
+        'preferred_script': 'cloud-hypervisor-host-setup.sh',
+        'description': 'Configuration and setup scripts for the Cloud Hypervisor (ch) provider, including Windows guest prerequisites.',
+        'tags': ['cloud-hypervisor', 'windows']
+    },
+    'hcloud': {
+        'preferred_script': 'k3s-ccm.sh',
+        'description': 'Installs the Hetzner Cloud controller manager and CSI driver on a K3s cluster.',
+        'tags': ['hcloud', 'hetzner', 'kubernetes', 'csi']
+    },
     'docker': {
         'preferred_script': 'docker.sh',
         'description': 'Installs Docker on the VM.',
