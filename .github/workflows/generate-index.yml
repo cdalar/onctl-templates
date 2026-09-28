@@ -9,19 +9,10 @@ name: Generate Index YAML
 #   - push to main / manual run: verify only; fail if index.yaml is stale.
 
 on:
+  # No path filter on PRs: this is a required check, and a path-filtered
+  # required check never reports on PRs that don't match, blocking them.
   pull_request:
     branches: [ main ]
-    paths:
-      - '*/**.sh'
-      - '*/**.yaml'
-      - '*/**.yml'
-      - '*/**.config'
-      - '*/**.toml'
-      - '*/**.json'
-      - '**/README.md'
-      - 'index.yaml'
-      - '.github/workflows/generate-index.yml'
-      - '.github/scripts/*.py'
   push:
     branches: [ main ]
     paths:
