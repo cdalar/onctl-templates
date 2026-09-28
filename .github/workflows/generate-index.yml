@@ -9,6 +9,7 @@ on:
       - '*/**.yml'
       - '*/**.config'
       - '*/**.toml'
+      - '*/**.json'
       - '**/README.md'
       - '.github/workflows/generate-index.yml'
       - '.github/scripts/*.py'
@@ -20,6 +21,7 @@ on:
       - '*/**.yml'
       - '*/**.config'
       - '*/**.toml'
+      - '*/**.json'
       - '**/README.md'
       - '.github/workflows/generate-index.yml'
       - '.github/scripts/*.py'
@@ -28,6 +30,11 @@ on:
 permissions:
   contents: write
   pull-requests: write
+
+# Serialize runs so two pushes can't race to commit index.yaml.
+concurrency:
+  group: generate-index-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   generate-index:
@@ -78,28 +85,20 @@ jobs:
         path: index.yaml
         retention-days: 30
         
-    - name: Create Pull Request with changes
-      if: steps.changes.outputs.changed == 'true' && github.event_name == 'push'
-      uses: peter-evans/create-pull-request@v7
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        commit-message: "Auto-update index.yaml [skip ci]"
-        title: "🤖 Auto-update index.yaml [skip ci]"
-        body: |
-          This PR was automatically created to update the `index.yaml` file based on repository changes.
-          
-          **What changed:**
-          - Template configurations updated from directory structure
-          - Generated from latest script files and README descriptions
-          
-          **Generated templates:** 
-          The workflow detected changes in template files and regenerated the index.
-          
-          This PR can be merged automatically to keep the index.yaml in sync with the repository structure.
-        branch: auto-update-index
-        delete-branch: true
-        base: ${{ github.ref_name }}
-        
+    - name: Commit index.yaml to branch
+      if: steps.changes.outputs.changed == 'true' && github.event_name != 'pull_request'
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add index.yaml
+        git commit -m "Auto-update index.yaml [skip ci]"
+        # Retry in case main moved while we were generating.
+        for i in 1 2 3; do
+          git pull --rebase origin "${{ github.ref_name }}" && git push origin "HEAD:${{ github.ref_name }}" && exit 0
+          sleep 5
+        done
+        exit 1
+
     - name: Comment on PR with changes
       if: steps.changes.outputs.changed == 'true' && github.event_name == 'pull_request'
       uses: actions/github-script@v8
@@ -111,7 +110,7 @@ jobs:
             repo: context.repo.repo,
             body: `🤖 **Auto-generated index.yaml changes detected**
             
-            The \`index.yaml\` file will be updated when this PR is merged. Since this repository has branch protection enabled, changes will be applied via an automated pull request after merge.
+            The \`index.yaml\` file will be updated when this PR is merged. It will be regenerated and committed to the default branch automatically after merge.
             
             📋 **How to review the changes:**
             1. Check the workflow run details above
@@ -122,5 +121,5 @@ jobs:
             - [Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
             - [Generated artifact](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)
             
-            After this PR is merged, an automated PR will be created to update the index.yaml file.`
+            No action needed: after this PR is merged, the workflow commits the regenerated index.yaml directly.`
           })
