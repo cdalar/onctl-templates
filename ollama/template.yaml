@@ -1,0 +1,11 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Sets up Ollama with Open WebUI for AI model management.
+tags: [ollama, ai, llm, webui]
+entrypoint: open-webui-ollama.sh
+files:
+  - path: install.sh
+    description: Installs Ollama natively and pulls llama3.
+  - path: host.sh
+    description: Makes a native Ollama listen on all interfaces (0.0.0.0).
+  - path: open-webui.sh
+    description: Runs Open WebUI only, pointing at an Ollama on the host.

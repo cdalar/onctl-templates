@@ -1,0 +1,8 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Echoes TEST_VAR and PUBLIC_IP to check variable injection.
+tags: [test]
+entrypoint: test.sh
+hidden: true
+env:
+  - name: TEST_VAR
+    description: Any value to echo back.

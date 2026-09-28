@@ -1,0 +1,10 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Registers an ephemeral self-hosted GitHub Actions runner using a just-in-time (JIT) config.
+tags: [github, github-actions, ci, runner, jit]
+entrypoint: github-runner-jit.sh
+env:
+  - name: JIT_CONFIG
+    required: true
+    description: Base64 JIT config from the generate-jitconfig API.
+  - name: SKIP_DOCKER
+    description: Set to 1 to skip installing Docker.

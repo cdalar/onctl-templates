@@ -1,0 +1,4 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Sets up Nginx web server.
+tags: [nginx, webserver, proxy]
+entrypoint: install.sh

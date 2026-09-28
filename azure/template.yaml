@@ -1,0 +1,16 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Azure cloud deployment and configuration scripts.
+tags: [azure, cloud, deployment]
+entrypoint: agent-pool.sh
+env:
+  - name: TOKEN
+    required: true
+    description: Azure DevOps personal access token.
+  - name: URL
+    required: true
+    description: Azure DevOps organization URL, e.g. https://dev.azure.com/<org>.
+  - name: AGENT_POOL_NAME
+    required: true
+    description: Agent pool to register into.
+  - name: AGENT_NAME
+    description: "Agent name (default: hostname)."

@@ -1,0 +1,8 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Cloudflare tunnel and DNS configuration.
+tags: [cloudflare, tunnel, dns]
+entrypoint: tunnel.sh
+env:
+  - name: CF_TOKEN
+    required: true
+    description: Cloudflare Tunnel token.

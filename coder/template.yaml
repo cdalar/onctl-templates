@@ -1,0 +1,4 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Coder development environment setup.
+tags: [coder, development, environment]
+entrypoint: init.sh

@@ -1,0 +1,10 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Configures WireGuard VPN server.
+tags: [wireguard, vpn, networking]
+entrypoint: vpn.sh
+files:
+  - path: multi.sh
+    description: WireGuard server with several client configs.
+    env:
+      - name: NUM_OF_CLIENTS
+        description: "Number of client configs (default: 1)."

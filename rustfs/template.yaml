@@ -1,0 +1,11 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Deploys RustFS object storage using the official Docker image.
+tags: [rustfs, object-storage, s3]
+entrypoint: rustfs.sh
+env:
+  - name: RUSTFS_VERSION
+    description: "Image tag (default: latest)."
+  - name: DATA_DIR
+    description: "Default: /opt/rustfs/data."
+  - name: LOG_DIR
+    description: "Default: /opt/rustfs/logs."

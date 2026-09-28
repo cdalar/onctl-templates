@@ -1,0 +1,4 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Prepares a KVM-capable VM to host Firecracker microVMs (with IP forwarding and NAT).
+tags: [firecracker, microvm, kvm]
+entrypoint: firecracker-host-setup.sh

@@ -1,0 +1,7 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Sets up a MinIO storage server.
+tags: [minio, storage, s3]
+entrypoint: docker.sh
+files:
+  - path: minio.sh
+    description: Installs MinIO from the .deb package as a systemd service on /mnt.

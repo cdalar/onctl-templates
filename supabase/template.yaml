@@ -1,0 +1,4 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Self-hosted Supabase backend-as-a-service (Postgres, Auth, Storage, Realtime, Studio).
+tags: [supabase, postgres, backend, database, auth]
+entrypoint: supabase.sh
