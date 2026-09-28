@@ -20,6 +20,13 @@ templates:
   - azure
   - cloud
   - deployment
+- name: cloud-hypervisor
+  version: 1.0.0
+  description: Configuration and setup scripts for the Cloud Hypervisor (ch) provider, including Windows guest prerequisites.
+  config: cloud-hypervisor/cloud-hypervisor-host-setup.sh
+  tags:
+  - cloud-hypervisor
+  - windows
 - name: cloud-init
   version: 1.0.0
   description: Provides cloud-init configuration templates.
@@ -53,17 +60,12 @@ templates:
   - container
 - name: firecracker
   version: 1.0.0
-  description: Configuration and setup scripts for firecracker.
+  description: Prepares a KVM-capable VM to host Firecracker microVMs (with IP forwarding and NAT).
   config: firecracker/firecracker-host-setup.sh
   tags:
   - firecracker
-- name: cloud-hypervisor
-  version: 1.0.0
-  description: Configuration and setup scripts for the Cloud Hypervisor (ch) provider, including Windows guest prerequisites.
-  config: cloud-hypervisor/cloud-hypervisor-host-setup.sh
-  tags:
-  - cloud-hypervisor
-  - windows
+  - microvm
+  - kvm
 - name: github-runner
   version: 1.0.0
   description: Registers an ephemeral self-hosted GitHub Actions runner.
@@ -85,11 +87,13 @@ templates:
   - jit
 - name: hcloud
   version: 1.0.0
-  description: Configuration and setup scripts for hcloud.
+  description: Installs the Hetzner Cloud controller manager and CSI driver on a K3s cluster.
   config: hcloud/k3s-ccm.sh
   tags:
   - hcloud
-  - cloud
+  - hetzner
+  - kubernetes
+  - csi
 - name: k3s
   version: 1.0.0
   description: Deploys a K3s server instance.
@@ -140,6 +144,15 @@ templates:
   - ai
   - llm
   - webui
+- name: rancher
+  version: 1.0.0
+  description: Rancher management (local) cluster on single-node k3s with cert-manager.
+  config: rancher/rancher-local.sh
+  tags:
+  - rancher
+  - kubernetes
+  - k3s
+  - management
 - name: rke2
   version: 1.0.0
   description: Installs and configures RKE2 Kubernetes distribution.

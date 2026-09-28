@@ -1,126 +1,104 @@
 name: Generate Index YAML
 
+# index.yaml is kept in sync inside each PR, so it lands on main together with
+# the template change and main never needs a bot commit:
+#   - PR from a branch in this repo: regenerate and commit index.yaml to the PR
+#     branch, then re-dispatch this workflow so the new head commit gets a check
+#     (pushes made with GITHUB_TOKEN don't trigger workflow runs).
+#   - PR from a fork: the token is read-only, so fail with instructions.
+#   - push to main / manual run: verify only; fail if index.yaml is stale.
+
 on:
-  push:
-    branches: [ main, master ]
+  pull_request:
+    branches: [ main ]
     paths:
       - '*/**.sh'
       - '*/**.yaml'
       - '*/**.yml'
       - '*/**.config'
       - '*/**.toml'
+      - '*/**.json'
       - '**/README.md'
+      - 'index.yaml'
       - '.github/workflows/generate-index.yml'
       - '.github/scripts/*.py'
-  pull_request:
-    branches: [ main, master ]
+  push:
+    branches: [ main ]
     paths:
       - '*/**.sh'
       - '*/**.yaml'
       - '*/**.yml'
       - '*/**.config'
       - '*/**.toml'
+      - '*/**.json'
       - '**/README.md'
+      - 'index.yaml'
       - '.github/workflows/generate-index.yml'
       - '.github/scripts/*.py'
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: {}
+
+concurrency:
+  group: generate-index-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  generate-index:
+  index:
+    name: index.yaml up to date
     runs-on: ubuntu-latest
-    
+    permissions:
+      contents: write   # commit index.yaml to same-repo PR branches
+      actions: write    # re-dispatch this workflow on the new commit
+
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
         ref: ${{ github.head_ref || github.ref_name }}
-      
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-        
+
     - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pyyaml
-        
+      run: python3 -m pip install --user pyyaml
+
     - name: Generate index.yaml
-      run: python .github/scripts/generate_index.py
-      
+      run: python3 .github/scripts/generate_index.py
+
     - name: Validate index.yaml
-      run: python .github/scripts/validate_index.py
-      
+      run: python3 .github/scripts/validate_index.py
+
     - name: Check for changes
       id: changes
       run: |
         if git diff --quiet index.yaml; then
-          echo "changed=false" >> $GITHUB_OUTPUT
-          echo "No changes detected in index.yaml"
+          echo "changed=false" >> "$GITHUB_OUTPUT"
+          echo "index.yaml is up to date"
         else
-          echo "changed=true" >> $GITHUB_OUTPUT
-          echo "Changes detected in index.yaml:"
-          echo "----------------------------------------"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
           git diff index.yaml
-          echo "----------------------------------------"
         fi
-        
-    - name: Upload generated index.yaml as artifact
-      if: steps.changes.outputs.changed == 'true'
-      uses: actions/upload-artifact@v4
-      with:
-        name: generated-index-yaml
-        path: index.yaml
-        retention-days: 30
-        
-    - name: Create Pull Request with changes
-      if: steps.changes.outputs.changed == 'true' && github.event_name == 'push'
-      uses: peter-evans/create-pull-request@v5
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        commit-message: "Auto-update index.yaml [skip ci]"
-        title: "🤖 Auto-update index.yaml"
-        body: |
-          This PR was automatically created to update the `index.yaml` file based on repository changes.
-          
-          **What changed:**
-          - Template configurations updated from directory structure
-          - Generated from latest script files and README descriptions
-          
-          **Generated templates:** 
-          The workflow detected changes in template files and regenerated the index.
-          
-          This PR can be merged automatically to keep the index.yaml in sync with the repository structure.
-        branch: auto-update-index
-        delete-branch: true
-        base: ${{ github.ref_name }}
-        
-    - name: Comment on PR with changes
-      if: steps.changes.outputs.changed == 'true' && github.event_name == 'pull_request'
-      uses: actions/github-script@v7
-      with:
-        script: |
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: `🤖 **Auto-generated index.yaml changes detected**
-            
-            The \`index.yaml\` file will be updated when this PR is merged. Since this repository has branch protection enabled, changes will be applied via an automated pull request after merge.
-            
-            📋 **How to review the changes:**
-            1. Check the workflow run details above
-            2. Look at the "Check for changes" step output to see the diff
-            3. Download the \`generated-index-yaml\` artifact to see the full file
-            
-            🔗 **Quick links:**
-            - [Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-            - [Generated artifact](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)
-            
-            After this PR is merged, an automated PR will be created to update the index.yaml file.`
-          })
+
+    - name: Commit index.yaml to PR branch
+      if: >-
+        steps.changes.outputs.changed == 'true' &&
+        github.event_name == 'pull_request' &&
+        github.event.pull_request.head.repo.full_name == github.repository
+      env:
+        GH_TOKEN: ${{ github.token }}
+        BRANCH: ${{ github.head_ref }}
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add index.yaml
+        git commit -m "Regenerate index.yaml"
+        git push origin "HEAD:$BRANCH"
+        gh workflow run generate-index.yml --ref "$BRANCH"
+        echo "::notice::Committed regenerated index.yaml to $BRANCH"
+
+    - name: Fail if index.yaml is stale
+      if: >-
+        steps.changes.outputs.changed == 'true' &&
+        !(github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository)
+      run: |
+        echo "::error::index.yaml is out of date. Run 'python3 .github/scripts/generate_index.py' and commit the result."
+        exit 1
