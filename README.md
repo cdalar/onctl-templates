@@ -40,4 +40,6 @@ curl -fsSL https://onctl.sh/get.sh | bash
    ```
 
    The full schema is in [`.github/scripts/manifest.py`](.github/scripts/manifest.py).
-3. Open a PR. CI validates the manifest and regenerates [`index.yaml`](index.yaml) on your branch.
+3. Open a PR. CI validates the manifest and builds the site. On merge, [`index.yaml`](https://templates.onctl.com/index.yaml) is generated and deployed; it isn't committed.
+
+   To preview it locally: `python3 .github/scripts/generate_index.py && onctl templates list -f index.yaml`
