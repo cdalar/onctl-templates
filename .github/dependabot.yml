@@ -1,0 +1,11 @@
+# Keeps the actions used in .github/workflows up to date.
+# Versions pinned inside template scripts aren't covered; Dependabot can't read shell.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]   # one PR per month for all action bumps
