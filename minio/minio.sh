@@ -1,9 +1,10 @@
 #!/bin/bash
+set -eo pipefail
 wget https://dl.min.io/server/minio/release/linux-amd64/archive/minio_20240710184149.0.0_amd64.deb -O minio.deb
 sudo dpkg -i minio.deb
 
-groupadd -r minio-user
-useradd -M -r -g minio-user minio-user
+getent group minio-user >/dev/null || groupadd -r minio-user
+id -u minio-user &>/dev/null || useradd -M -r -g minio-user minio-user
 chown minio-user:minio-user /mnt
 
 cat <<EOF > /etc/default/minio

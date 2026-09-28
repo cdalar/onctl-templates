@@ -1,0 +1,38 @@
+name: Lint
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  shellcheck:
+    name: shellcheck
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v5
+
+    - name: Check shebangs
+      run: |
+        # onctl runs templates as ./script, so the shebang must be the very first bytes.
+        bad=0
+        for f in $(git ls-files '*.sh'); do
+          if [ "$(head -c 2 "$f")" != '#!' ]; then
+            echo "::error file=$f,line=1::Missing or misplaced shebang"
+            bad=1
+          fi
+        done
+        exit $bad
+
+    - name: Syntax check
+      run: |
+        for f in $(git ls-files '*.sh'); do bash -n "$f"; done
+
+    - name: shellcheck
+      # shellcheck is preinstalled on ubuntu-latest runners.
+      run: shellcheck -S warning -f gcc $(git ls-files '*.sh')

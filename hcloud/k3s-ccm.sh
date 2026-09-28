@@ -1,5 +1,6 @@
 #!/bin/bash
-kubectl -n kube-system create secret generic hcloud --from-literal=token="${HCLOUD_TOKEN}"
+set -eo pipefail
+kubectl -n kube-system create secret generic hcloud --from-literal=token="${HCLOUD_TOKEN}" --dry-run=client -o yaml | kubectl apply -f -
 # helm repo add hcloud https://charts.hetzner.cloud
 # helm repo update hcloud
 # helm install hccm hcloud/hcloud-cloud-controller-manager -n kube-system

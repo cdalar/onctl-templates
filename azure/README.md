@@ -4,7 +4,7 @@ Ref: https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view
 
 # using .env file
   * Create a dot-env file.
-    create the file below with your variables and save it as ".env.test"
+    copy [`.env.example`](.env.example) to ".env.test" and fill in your variables:
     ```
     TOKEN=<Yout_PAT_token>
     AGENT_POOL_NAME=<POOL_NAME>

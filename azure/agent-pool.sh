@@ -1,4 +1,4 @@
- #!/bin/bash
+#!/bin/bash
 # Create user ubuntu if needed 
 set -ex
 if ! id -u ubuntu > /dev/null 2>&1; then

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eo pipefail
 onctl up -n k3s-server -a k3s/k3s-wg-server.sh -d /tmp/token -d /tmp/k3s.yaml
 SERVER_IP=$(onctl ls -ojson | jq -r '.[] | select(.Name == "k3s-server") | .IP')
 
