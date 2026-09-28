@@ -1,0 +1,38 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Deploys a K3s server instance.
+tags: [k3s, kubernetes, server]
+entrypoint: k3s-server.sh
+files:
+  - path: k3s-agent.sh
+    description: Joins the VM to an existing K3s server as an agent.
+    env:
+      - name: SERVER_IP
+        required: true
+        description: IP of the K3s server.
+      - name: TOKEN
+        required: true
+        description: K3s join token (/tmp/token on the server).
+  - path: k3s-wg-server.sh
+    description: K3s server using WireGuard-encrypted flannel, for nodes across networks.
+  - path: k3s-wg-agent.sh
+    description: Joins a WireGuard-flannel K3s server as an agent.
+    env:
+      - name: SERVER_IP
+        required: true
+        description: IP of the K3s server.
+      - name: TOKEN
+        required: true
+        description: K3s join token (/tmp/token on the server).
+  - path: k3s-cilium.sh
+    description: K3s server with Cilium as CNI instead of flannel and kube-proxy.
+  - path: argocd-core.sh
+    description: Installs Argo CD (core) and its CLI on an existing K3s server.
+  - path: traefik-helm.yaml
+    type: manifest
+    description: HelmChartConfig enabling the Traefik dashboard on K3s.
+  - path: k3s.sh
+    type: local
+    description: "Run locally: creates a WireGuard K3s server plus NODE_COUNT agents with onctl."
+    env:
+      - name: NODE_COUNT
+        description: "Number of agent VMs (default: 2)."

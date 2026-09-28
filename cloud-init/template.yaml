@@ -1,0 +1,9 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Provides cloud-init configuration templates.
+tags: [cloud-init, cloud, initialization]
+entrypoint: ssh-443.config
+type: cloud-init
+files:
+  - path: ssh-443-RHEL.config
+    type: cloud-init
+    description: Moves SSH to port 443 on RHEL-family images (SELinux + firewalld).

@@ -20,3 +20,24 @@ curl -fsSL https://onctl.sh/get.sh | bash
 - ✨ Cloud-init support. Set your own cloud-init file `onctl up -n qwe --cloud-init <cloud.init.file>`
 - 🤖 Use ready to use templates to configure your vm. Check [onctl-templates](https://github.com/cdalar/onctl-templates) `onctl up -n qwe -a k3s/k3s-server.sh`
 - 🗂️ Use your custom local or http accessible scripts to configure your vm. `onctl ssh qwe -a <my_local_script.sh>`
+
+## Adding a template
+
+1. Create a top-level directory with your script(s).
+2. Add a `template.yaml` next to them:
+
+   ```yaml
+   description: Installs Foo on the VM.
+   tags: [foo, database]
+   entrypoint: foo.sh          # what `onctl up -a foo/foo.sh` runs
+   env:                        # variables the script reads (PUBLIC_IP is always set by onctl)
+     - name: FOO_PASSWORD
+       required: true
+       description: Admin password.
+   files:                      # every other script in the directory must be listed
+     - path: foo-agent.sh
+       description: Joins an existing Foo server.
+   ```
+
+   The full schema is in [`.github/scripts/manifest.py`](.github/scripts/manifest.py).
+3. Open a PR. CI validates the manifest and regenerates [`index.yaml`](index.yaml) on your branch.

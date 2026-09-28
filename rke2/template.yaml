@@ -1,0 +1,4 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Installs and configures RKE2 Kubernetes distribution.
+tags: [rke2, kubernetes, rancher]
+entrypoint: rke2.sh

@@ -1,0 +1,4 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Deploys a K3s server instance on Firecracker microVMs (flannel host-gw backend, no VXLAN needed).
+tags: [k3s, kubernetes, server, firecracker]
+entrypoint: k3s-server.sh

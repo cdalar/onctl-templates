@@ -1,0 +1,8 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Installs the Hetzner Cloud controller manager and CSI driver on a K3s cluster.
+tags: [hcloud, hetzner, kubernetes, csi]
+entrypoint: k3s-ccm.sh
+env:
+  - name: HCLOUD_TOKEN
+    required: true
+    description: Hetzner Cloud API token.

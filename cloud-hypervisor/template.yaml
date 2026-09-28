@@ -1,0 +1,4 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Configuration and setup scripts for the Cloud Hypervisor (ch) provider, including Windows guest prerequisites.
+tags: [cloud-hypervisor, windows]
+entrypoint: cloud-hypervisor-host-setup.sh

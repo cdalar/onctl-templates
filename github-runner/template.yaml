@@ -1,0 +1,13 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Registers an ephemeral self-hosted GitHub Actions runner.
+tags: [github, github-actions, ci, runner]
+entrypoint: github-runner.sh
+env:
+  - name: GH_REPO
+    required: true
+    description: Repository to register with, as owner/repo.
+  - name: RUNNER_TOKEN
+    required: true
+    description: Runner registration token.
+  - name: RUNNER_LABELS
+    description: "Comma-separated runner labels (default: onctl)."

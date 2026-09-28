@@ -1,0 +1,5 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Ansible playbooks for automated configuration management.
+tags: [ansible, automation, configuration]
+entrypoint: playbooks/docker.yaml
+type: ansible

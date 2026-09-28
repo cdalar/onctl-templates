@@ -1,0 +1,7 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Installs Docker on the VM.
+tags: [docker, container]
+entrypoint: docker.sh
+files:
+  - path: nginx.sh
+    description: Runs a sample Nginx container on port 80 (needs Docker).
