@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -eo pipefail
 # Disable UFW if not already disabled
 if ufw status | grep -q "active"; then
     ufw disable

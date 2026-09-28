@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -eo pipefail
 # Path to the systemd unit file
 unit_file="/etc/systemd/system/ollama.service"
 

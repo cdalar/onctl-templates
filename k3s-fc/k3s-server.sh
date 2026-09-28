@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eo pipefail
 # Same as k3s/k3s-server.sh, except the flannel CNI backend is pinned to
 # host-gw instead of the default vxlan. Firecracker microVM guest kernels
 # don't support VXLAN ("failed to create vxlan device: operation not
