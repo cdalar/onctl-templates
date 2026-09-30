@@ -75,5 +75,10 @@ echo "codex-exec-server started (logs: journalctl -u codex-exec-server)"
 EOF
 chmod 755 /usr/local/bin/codex-set-key /usr/local/bin/codex-connect
 
-echo "Codex $(codex --version) ready, workspace ${WORKSPACE}"
+# A real check: npm installs the Codex wrapper without its platform
+# binary, silently, when @alpha points at a release whose Linux build
+# isn't on npm yet -- and only running it shows that. An assignment,
+# because set -e ignores a failing $(...) inside a command's arguments.
+codex_version=$(codex --version)
+echo "${codex_version} ready, workspace ${WORKSPACE}"
 echo "Next: codex-set-key, then codex-connect <remote_url> <environment_id>"
