@@ -1,0 +1,9 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Self-hosted environment for OpenAI Agents API sessions (Codex CLI and codex exec-server helpers).
+tags: [openai, agents, codex, ai]
+entrypoint: codex-executor.sh
+env:
+  - name: CODEX_VERSION
+    description: "npm version or tag of @openai/codex (default: alpha)."
+  - name: WORKSPACE
+    description: "The agent's working directory; must match the session's workspace_directory (default: /workspace)."
