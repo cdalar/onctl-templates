@@ -9,3 +9,8 @@ env:
     description: "Address of the machine running the model servers (default: the VM's default gateway, i.e. its host)."
   - name: LLM_PORTS
     description: "Space-separated ports to look for an OpenAI-compatible llama.cpp server on (default: 8080 8081)."
+usage:
+  - command: grep '^\[agents' ~/.zeroclaw/config.toml
+    description: List the agents the script set up, one per model it found on the host.
+  - command: zeroclaw agent -a gemma
+    description: Start an interactive session. Replace gemma with one of your agents.

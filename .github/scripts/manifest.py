@@ -14,6 +14,9 @@ A top-level directory is a template when it contains template.yaml. Schema:
       - name: str               PUBLIC_IP is always set by onctl, don't list it.
         required: bool          optional, default false
         description: str        required
+    usage:                      optional; commands to run on the VM once the
+      - command: str            entrypoint has finished: what a front end can
+        description: str        offer as "next steps". Both required.
     files:                      optional; other files in the template worth listing
       - path: path              required, relative to the template directory
         type: str               optional, default "script"
@@ -41,9 +44,10 @@ TYPES = {
 }
 SCRIPT_EXTENSIONS = ('.sh', '.yaml', '.yml', '.config', '.toml', '.json')
 
-TEMPLATE_KEYS = {'description', 'tags', 'entrypoint', 'type', 'hidden', 'env', 'files'}
+TEMPLATE_KEYS = {'description', 'tags', 'entrypoint', 'type', 'hidden', 'env', 'usage', 'files'}
 FILE_KEYS = {'path', 'type', 'description', 'env'}
 ENV_KEYS = {'name', 'required', 'description'}
+USAGE_KEYS = {'command', 'description'}
 
 
 class ManifestError(Exception):
@@ -97,6 +101,22 @@ def _check_env(env, where):
             raise ManifestError(f"{w}.required: must be true or false")
 
 
+def _check_usage(usage, where):
+    if not isinstance(usage, list):
+        raise ManifestError(f"{where}: must be a list")
+    commands = set()
+    for i, step in enumerate(usage):
+        w = f"{where}[{i}]"
+        _check_keys(step, USAGE_KEYS, ['command', 'description'], w)
+        _check_str(step['command'], f"{w}.command")
+        _check_str(step['description'], f"{w}.description")
+        if '\n' in step['command'].strip():
+            raise ManifestError(f"{w}.command: must be a single line")
+        if step['command'] in commands:
+            raise ManifestError(f"{w}: duplicate command {step['command']!r}")
+        commands.add(step['command'])
+
+
 def _script_files(template_dir):
     for root, dirs, files in os.walk(template_dir):
         dirs[:] = [d for d in dirs if not d.startswith('.')]
@@ -126,6 +146,8 @@ def load_manifest(template_dir):
         raise ManifestError(f"{where}: hidden must be true or false")
     if 'env' in data:
         _check_env(data['env'], f"{where}: env")
+    if 'usage' in data:
+        _check_usage(data['usage'], f"{where}: usage")
 
     listed = {data['entrypoint']}
     files = data.get('files', [])

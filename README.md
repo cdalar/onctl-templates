@@ -34,6 +34,9 @@ curl -fsSL https://onctl.sh/get.sh | bash
      - name: FOO_PASSWORD
        required: true
        description: Admin password.
+   usage:                      # optional: what to run on the VM once the script has finished
+     - command: foo status
+       description: Check that Foo is up.
    files:                      # every other script in the directory must be listed
      - path: foo-agent.sh
        description: Joins an existing Foo server.
