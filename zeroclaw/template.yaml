@@ -1,0 +1,11 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Installs the ZeroClaw agent runtime and connects it to the llama.cpp servers on the VM's host, no API key needed.
+tags: [zeroclaw, agents, ai, llm, llama.cpp]
+entrypoint: zeroclaw.sh
+env:
+  - name: ZEROCLAW_VERSION
+    description: "ZeroClaw release tag to install (default: v0.8.5)."
+  - name: LLM_HOST
+    description: "Address of the machine running the model servers (default: the VM's default gateway, i.e. its host)."
+  - name: LLM_PORTS
+    description: "Space-separated ports to look for an OpenAI-compatible llama.cpp server on (default: 8080 8081)."
