@@ -38,6 +38,9 @@ def build_index(manifests):
         }
         if m.get('env'):
             entry['env'] = _env(m['env'])
+        if m.get('usage'):
+            entry['usage'] = [{'command': u['command'].strip(), 'description': u['description']}
+                              for u in m['usage']]
         if m.get('files'):
             entry['files'] = []
             for f in m['files']:
