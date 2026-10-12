@@ -1,0 +1,20 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Runs the Neo4j graph database in Docker, with the Neo4j Browser on port 7474 and Bolt on port 7687.
+tags: [neo4j, database, graph]
+entrypoint: neo4j.sh
+env:
+  - name: NEO4J_PASSWORD
+    description: "Password of the neo4j user, at least 8 characters (default: generated, printed at the end and kept in NEO4J_HOME/password)."
+  - name: NEO4J_VERSION
+    description: "Image tag (default: 2026.09.0)."
+  - name: NEO4J_HOME
+    description: "Directory on the VM for data, logs and the password file (default: /opt/neo4j)."
+  - name: BOLT_ADVERTISED_ADDRESS
+    description: "host:port clients reach Bolt on, when it isn't the VM's own address on 7687, e.g. the public URL of port 7687 with :443."
+usage:
+  - command: cat /opt/neo4j/password
+    description: Show the password of the neo4j user.
+  - command: docker exec -it neo4j cypher-shell -u neo4j -p "$(cat /opt/neo4j/password)"
+    description: Open a Cypher shell on the database.
+  - command: docker logs -f neo4j
+    description: Follow the server log.
