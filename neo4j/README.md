@@ -58,8 +58,12 @@ To have the Browser fill in the right address by itself, and to make `neo4j+s://
 is reachable. This restarts the container and keeps the data and the password:
 
 ```
-onctl ssh graph -a neo4j/neo4j.sh -e BOLT_ADVERTISED_ADDRESS=graph-bbbbbbbb.boxctl.app:443
+boxctl ssh graph -T 3m -- "curl -fsSL https://templates.onctl.com/neo4j/neo4j.sh | BOLT_ADVERTISED_ADDRESS=graph-bbbbbbbb.boxctl.app:443 bash"
 ```
+
+Keep both ports exposed once they are set up. A URL stays the same for as long as its port is exposed, across pause
+and resume, but `boxctl unexpose` retires it: exposing the port again gives a new one. After that, the address in
+the connect form and `BOLT_ADVERTISED_ADDRESS` both have to be changed to the new 7687 URL.
 
 Anyone who has the URLs can reach the database; the password is all that protects it.
 
