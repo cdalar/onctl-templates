@@ -24,22 +24,48 @@ machine to port 7687 to log in and run queries. With only 7474 reachable the pag
 
 ### Behind public HTTPS URLs
 
-When the VM has no public address and each port gets its own HTTPS URL, expose `7474` and `7687`:
-
-1. Open the URL of port 7474. That is the Browser.
-2. In its connect form, pick the `bolt+s://` scheme and enter the host of the port 7687 URL with port `443`,
-   e.g. `bolt+s://graph-7687.example.com:443`. Log in as `neo4j`.
-
-A page served over HTTPS may only open encrypted connections, hence `bolt+s://`. Bolt on 7687 also speaks WebSocket,
-which is what the Browser uses, so an HTTPS proxy that passes WebSockets through is enough; Neo4j itself needs no
-certificate.
-
-To have the Browser fill that address in by itself, and to make the `neo4j+s://` scheme work too, tell Neo4j where
-Bolt is reachable:
+On a box (boxctl.io) the VM has no public address; each port gets its own HTTPS URL instead. Expose two ports, not
+one:
 
 ```
-onctl ssh graph -a neo4j/neo4j.sh -e BOLT_ADVERTISED_ADDRESS=graph-7687.example.com:443
+boxctl expose graph 7474     # https://graph-aaaaaaaa.boxctl.app -> the Browser
+boxctl expose graph 7687     # https://graph-bbbbbbbb.boxctl.app -> Bolt
+boxctl expose graph          # list both URLs
 ```
+
+Open the URL of port 7474 and fill in the connect form:
+
+| Field          | Value                                                                    |
+| -------------- | ------------------------------------------------------------------------ |
+| Protocol       | `bolt+s://`                                                              |
+| Connection URL | the host of the port **7687** URL, then `:443`: `graph-bbbbbbbb.boxctl.app:443` |
+| Database       | leave empty (the default database, `neo4j`)                              |
+| Username       | `neo4j`                                                                  |
+| Password       | printed by the script; `cat /opt/neo4j/password` on the VM               |
+
+Three things go wrong here:
+
+- The Browser fills in the host of the page with port `7687`, e.g. `graph-aaaaaaaa.boxctl.app:7687`. Nothing listens
+  there. Replace it with the host of the other URL, the one for port 7687.
+- The port is `443`, not `7687`: you are connecting to the HTTPS URL, which forwards to 7687 on the VM.
+- `bolt://` and `neo4j://` are refused. A page served over HTTPS may only open encrypted connections, so the protocol
+  has to end in `+s`. Leave `https://` out of the connection URL.
+
+Neo4j itself needs no certificate. Bolt on 7687 also speaks WebSocket, which is what the Browser uses, and the URL
+passes WebSockets through with its own TLS.
+
+To have the Browser fill in the right address by itself, and to make `neo4j+s://` work too, tell Neo4j where Bolt
+is reachable. This restarts the container and keeps the data and the password:
+
+```
+boxctl ssh graph -T 3m -- "curl -fsSL https://templates.onctl.com/neo4j/neo4j.sh | BOLT_ADVERTISED_ADDRESS=graph-bbbbbbbb.boxctl.app:443 bash"
+```
+
+Keep both ports exposed once they are set up. A URL stays the same for as long as its port is exposed, across pause
+and resume, but `boxctl unexpose` retires it: exposing the port again gives a new one. After that, the address in
+the connect form and `BOLT_ADVERTISED_ADDRESS` both have to be changed to the new 7687 URL.
+
+Anyone who has the URLs can reach the database; the password is all that protects it.
 
 Drivers and `cypher-shell` on your own machine speak plain TCP Bolt, not WebSocket, so they can't go through an HTTP
 URL. Forward the port instead, `onctl port-forward graph 7687`, and use `bolt://localhost:7687`.
