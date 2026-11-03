@@ -1,0 +1,24 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Runs an NVIDIA OpenShell gateway in Docker, with mTLS on port 8080 and the Docker driver for sandboxes. Needs Linux 6.2+ (e.g. Ubuntu 24.04).
+tags: [openshell, ai, agents, sandbox, docker]
+entrypoint: openshell.sh
+env:
+  - name: OPENSHELL_VERSION
+    description: "Gateway, supervisor and sandbox image tag (default: 0.1.6). Match it to your openshell CLI."
+  - name: OPENSHELL_PORT
+    description: "Gateway port (default: 8080). The health endpoint is on the next port, on loopback only."
+  - name: OPENSHELL_LISTEN
+    description: "Address the gateway listens on (default: 0.0.0.0). Set 127.0.0.1 to reach it only through an SSH tunnel (onctl port-forward)."
+  - name: OPENSHELL_SERVER_SAN
+    description: "Comma-separated names/IPs for the server certificate (default: PUBLIC_IP). Only used when the certificates are first generated."
+  - name: OPENSHELL_DEFAULT_IMAGE
+    description: "Image for sandboxes created without --from (default: nvcr.io/nvidia/base/ubuntu:24.04)."
+  - name: OPENSHELL_HOME
+    description: "Directory on the VM for the database, certificates and supervisor binaries (default: /var/lib/openshell)."
+usage:
+  - command: docker compose -f /opt/openshell/docker-compose.yml logs -f gateway
+    description: Follow the gateway log.
+  - command: curl -fs http://127.0.0.1:8081/readyz && echo ready
+    description: Check that the gateway is ready.
+  - command: docker ps --filter label=openshell.sandbox_namespace
+    description: List the containers behind the sandboxes.
