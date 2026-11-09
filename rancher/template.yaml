@@ -17,3 +17,6 @@ env:
     description: "cert-manager chart version (default: latest; RANCHER_TLS=ingress only)."
   - name: K3S_VERSION
     description: "e.g. v1.35.4+k3s1 (default: k3s stable channel). Only when k3s is installed by this script."
+usage:
+  - command: cat /root/rancher-info.txt
+    description: Show the Rancher URL and the bootstrap password.

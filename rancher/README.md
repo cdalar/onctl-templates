@@ -4,6 +4,27 @@ Creates a single-node k3s cluster and installs cert-manager and Rancher on it, s
 management ("local") cluster that you can import or provision downstream clusters from. If the VM already runs
 RKE2 or k3s (for example from [`rke2/rke2.sh`](../rke2/README.md)), that cluster is used instead of installing k3s.
 
+### On boxctl.io
+
+This template's defaults don't fit a boxctl box: it has no public IP, and its public URL
+(`https://<label>.boxctl.app`) terminates TLS and sends plain HTTP to the port you make public. For a clean
+install, boot the box with the **[`rancher-rke2`](../rancher-rke2/README.md)** template instead. It serves Rancher
+on port 80 for whatever public URL you give it.
+
+On a box that already runs RKE2 or k3s (for example one booted with this template, or with `rke2`), make
+**port 80** public, then run this script again in the box's terminal, as root, with that URL's hostname:
+
+```
+curl -fsSLO https://templates.onctl.com/rancher/rancher-local.sh
+RANCHER_HOSTNAME=<label>.boxctl.app RANCHER_TLS=external \
+  BOOTSTRAP_PASSWORD='<a strong password>' bash rancher-local.sh
+```
+
+It reuses the cluster that's there and switches Rancher to the public URL. Then open
+`https://<label>.boxctl.app` and sign in with the bootstrap password (also in `/root/rancher-info.txt`).
+
+### On a VM with a public IP
+
 ```
 onctl up -n rancher -a rancher/rancher-local.sh --download /root/rancher-info.txt
 cat rancher-info.txt
@@ -51,24 +72,8 @@ supports. Set `K3S_VERSION` to a supported version.
 When a load balancer or proxy terminates TLS and forwards plain HTTP to the VM's port 80, set
 `RANCHER_TLS=external` and `RANCHER_HOSTNAME` to the name users open. cert-manager is not installed, and the
 cluster's ingress controller (Traefik, or RKE2's ingress-nginx) is set to trust the `X-Forwarded-Proto: https`
-header the proxy sends, so Rancher knows it is reached over HTTPS.
-
-#### On boxctl.io
-
-A boxctl box has no public IP; its public URL (`https://<label>.boxctl.app`) terminates TLS and sends HTTP to the
-port you expose. The URL exists only once the port is exposed, so run the script after that, not as the box's
-template:
-
-```
-boxctl expose rancher 80                    # prints https://<label>.boxctl.app
-boxctl ssh rancher
-curl -fsSLO https://templates.onctl.com/rancher/rancher-local.sh
-RANCHER_HOSTNAME=<label>.boxctl.app RANCHER_TLS=external bash rancher-local.sh
-```
-
-Use a large box: Rancher needs the memory, and the smaller sizes' 10 GiB disk fills with its images. Boot the box
-with the `rke2` template to run Rancher on RKE2; otherwise k3s is installed. Keep the public URL: removing it
-retires the hostname, and Rancher's server URL with it.
+header the proxy sends, so Rancher knows it is reached over HTTPS. A boxctl public URL is this case; see
+[On boxctl.io](#on-boxctlio).
 
 ### Kubeconfig
 

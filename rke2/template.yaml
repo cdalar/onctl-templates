@@ -2,3 +2,6 @@
 description: Installs and configures RKE2 Kubernetes distribution.
 tags: [rke2, kubernetes, rancher]
 entrypoint: rke2.sh
+usage:
+  - command: /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml get pods -A
+    description: Check that the cluster's pods are running.
