@@ -71,6 +71,14 @@ cp "$KUBECONFIG" /tmp/rke2.yaml
 chmod 600 /tmp/rke2.yaml
 wait_for 600 "node Ready" sh -c 'kubectl get nodes --no-headers | grep -qw Ready'
 
+# Make crictl (containerd's CLI -- RKE2 has no docker) and kubectl work in any
+# shell: on the default PATH, and with RKE2's containerd socket in the config
+# file crictl reads by default.
+for bin in crictl kubectl ctr; do
+    ln -sf "/var/lib/rancher/rke2/bin/$bin" "/usr/local/bin/$bin"
+done
+ln -sf /var/lib/rancher/rke2/agent/etc/crictl.yaml /etc/crictl.yaml
+
 # Ingress controller: Traefik on recent RKE2, ingress-nginx on older ones.
 ingress_up() { [ "$(curl -s -o /dev/null -w '%{http_code}' "http://${LOCAL_IP}/")" != "000" ]; }
 wait_for 600 "an IngressClass" sh -c 'kubectl get ingressclass --no-headers | grep -q .'
