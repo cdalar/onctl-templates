@@ -1,0 +1,18 @@
+# Template manifest. Schema: .github/scripts/manifest.py
+description: Rancher on single-node RKE2, behind a TLS-terminating proxy such as a boxctl.io public URL (serves HTTP on port 80).
+tags: [rancher, rke2, kubernetes, management, boxctl]
+entrypoint: rancher-rke2.sh
+env:
+  - name: RANCHER_HOSTNAME
+    description: "The address users open, if known up front (default: unset, any hostname is served)."
+  - name: RANCHER_VERSION
+    description: "Rancher chart version (default: latest)."
+  - name: BOOTSTRAP_PASSWORD
+    description: "First admin password (default: random, saved to /root/rancher-bootstrap-password)."
+  - name: RKE2_VERSION
+    description: "e.g. v1.35.4+rke2r1 (default: RKE2 stable channel)."
+usage:
+  - command: cat /root/rancher-info.txt
+    description: Show the bootstrap password for Rancher's first login.
+  - command: kubectl -n cattle-system get pods
+    description: Check that Rancher is running.
