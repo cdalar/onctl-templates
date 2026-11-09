@@ -1,10 +1,12 @@
 # Template manifest. Schema: .github/scripts/manifest.py
-description: Rancher management (local) cluster on single-node k3s with cert-manager.
+description: Rancher management (local) cluster on single-node k3s (or an existing RKE2/k3s), with cert-manager or external TLS.
 tags: [rancher, kubernetes, k3s, management]
 entrypoint: rancher-local.sh
 env:
   - name: RANCHER_HOSTNAME
     description: "Default: rancher.<public-ip-with-dashes>.sslip.io."
+  - name: RANCHER_TLS
+    description: "ingress (default: self-signed HTTPS on 443) or external (TLS ends in front of the VM, e.g. a boxctl public URL; HTTP on 80)."
   - name: RANCHER_VERSION
     description: "Rancher chart version (default: latest)."
   - name: RANCHER_REPLICAS
@@ -12,6 +14,6 @@ env:
   - name: BOOTSTRAP_PASSWORD
     description: "First admin password (default: random, saved to /root/rancher-bootstrap-password)."
   - name: CERT_MANAGER_VERSION
-    description: "cert-manager chart version (default: latest)."
+    description: "cert-manager chart version (default: latest; RANCHER_TLS=ingress only)."
   - name: K3S_VERSION
-    description: "e.g. v1.35.4+k3s1 (default: k3s stable channel)."
+    description: "e.g. v1.35.4+k3s1 (default: k3s stable channel). Only when k3s is installed by this script."
