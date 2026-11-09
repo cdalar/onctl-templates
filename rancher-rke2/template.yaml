@@ -16,3 +16,5 @@ usage:
     description: Show the bootstrap password for Rancher's first login.
   - command: kubectl -n cattle-system get pods
     description: Check that Rancher is running.
+  - command: crictl ps
+    description: List running containers (RKE2 uses containerd, not docker).
