@@ -140,7 +140,12 @@ else
     helm repo update
 fi
 
-# Rancher
+# Rancher. With RANCHER_TLS=external Rancher has no CA of its own to pin, so
+# 2.9+'s default agent-tls-mode (strict) aborts every downstream node's
+# registration ("strict CA verification with no CA checksum"); agents check
+# the proxy's (publicly trusted) certificate against the system store instead.
+AGENT_TLS_MODE=""
+[ "$RANCHER_TLS" = external ] && AGENT_TLS_MODE=system-store
 if [ -n "${BOOTSTRAP_PASSWORD:-}" ]; then
     printf '%s\n' "$BOOTSTRAP_PASSWORD" > "$PASSWORD_FILE"
 elif [ ! -s "$PASSWORD_FILE" ]; then
@@ -153,6 +158,7 @@ if ! helm upgrade --install rancher rancher-stable/rancher -n cattle-system --cr
     ${RANCHER_VERSION:+--version "$RANCHER_VERSION"} \
     --set hostname="$RANCHER_HOSTNAME" \
     --set tls="$RANCHER_TLS" \
+    ${AGENT_TLS_MODE:+--set agentTLSMode="$AGENT_TLS_MODE"} \
     --set ingress.ingressClassName="$INGRESS_CLASS" \
     --set bootstrapPassword="$(head -n1 "$PASSWORD_FILE")" \
     --set replicas="$RANCHER_REPLICAS" \

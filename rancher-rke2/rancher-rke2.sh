@@ -118,7 +118,11 @@ fi
 helm repo add rancher-stable https://releases.rancher.com/server-charts/stable --force-update
 helm repo update
 
-# Rancher
+# Rancher. agentTLSMode=system-store: with TLS in front of Rancher it has no CA
+# of its own to pin, so 2.9+'s default (strict) makes every downstream node's
+# registration abort with "strict CA verification with no CA checksum". The
+# proxy's certificate is publicly trusted (a boxctl public URL's is), so the
+# system trust store is what agents should check it against.
 if [ -n "${BOOTSTRAP_PASSWORD:-}" ]; then
     printf '%s\n' "$BOOTSTRAP_PASSWORD" > "$PASSWORD_FILE"
 elif [ ! -s "$PASSWORD_FILE" ]; then
@@ -131,6 +135,7 @@ if ! helm upgrade --install rancher rancher-stable/rancher -n cattle-system --cr
     ${RANCHER_VERSION:+--version "$RANCHER_VERSION"} \
     --set hostname="$CHART_HOSTNAME" \
     --set tls=external \
+    --set agentTLSMode=system-store \
     --set ingress.ingressClassName="$INGRESS_CLASS" \
     --set bootstrapPassword="$(head -n1 "$PASSWORD_FILE")" \
     --set replicas=1 \
