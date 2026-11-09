@@ -21,6 +21,10 @@ any hostname, so the address doesn't have to exist yet when the VM boots. For a 
 4. Open the public URL (`https://<label>.boxctl.app`), sign in with the bootstrap password, set a new one, and
    check that the **Server URL** Rancher offers is that public URL. Downstream clusters register against it.
 
+To add a downstream cluster on another box, install `iptables` there first (`apt-get install -y iptables`;
+RKE2's CNI needs it), then run the registration command Rancher shows. The node connects out to Rancher through
+the public URL, so its own ports don't need to be public.
+
 Anyone with the link reaches the sign-in page, so the password is what protects Rancher. Keep the public URL:
 removing it retires the hostname, and Rancher's Server URL with it. For `kubectl` from your own machine, use
 `boxctl port-forward <box> 6443` with `/tmp/rke2.yaml` from the box.
@@ -31,7 +35,8 @@ removing it retires the hostname, and Rancher's Server URL with it. For `kubectl
 onctl up -n rancher -a rancher-rke2/rancher-rke2.sh -e RANCHER_HOSTNAME=rancher.example.com
 ```
 
-Point the proxy or load balancer at the VM's port 80, and have it set `X-Forwarded-Proto: https`.
+Point the proxy or load balancer at the VM's port 80, and have it set `X-Forwarded-Proto: https`. Its certificate
+must be publicly trusted: downstream nodes check it against their system trust store.
 
 | Variable | Default | Description |
 |---|---|---|
@@ -45,8 +50,9 @@ Point the proxy or load balancer at the VM's port 80, and have it set `X-Forward
 - Installs `iptables` if it's missing (RKE2's CNI needs it), then RKE2.
 - Sets RKE2's ingress controller (Traefik, or ingress-nginx on older RKE2) to trust the proxy's
   `X-Forwarded-Proto` header, so Rancher knows it is reached over HTTPS.
-- Installs Rancher with `tls=external` (no cert-manager) and, without `RANCHER_HOSTNAME`, an extra Ingress
-  `rancher-any-host` that sends every hostname to it.
+- Installs Rancher with `tls=external` (no cert-manager) and `agentTLSMode=system-store`, so downstream nodes
+  check the proxy's certificate against their system trust store instead of a Rancher CA that doesn't exist.
+- Without `RANCHER_HOSTNAME`, adds an Ingress `rancher-any-host` that sends every hostname to Rancher.
 
 If the install fails with an incompatible `kubeVersion`, the RKE2 stable channel is newer than the Rancher
 release supports. Set `RKE2_VERSION` to a supported version.

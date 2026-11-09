@@ -72,7 +72,8 @@ supports. Set `K3S_VERSION` to a supported version.
 When a load balancer or proxy terminates TLS and forwards plain HTTP to the VM's port 80, set
 `RANCHER_TLS=external` and `RANCHER_HOSTNAME` to the name users open. cert-manager is not installed, and the
 cluster's ingress controller (Traefik, or RKE2's ingress-nginx) is set to trust the `X-Forwarded-Proto: https`
-header the proxy sends, so Rancher knows it is reached over HTTPS. A boxctl public URL is this case; see
+header the proxy sends, so Rancher knows it is reached over HTTPS. Rancher's `agent-tls-mode` is set to `system-store`, so the
+proxy's certificate must be publicly trusted for downstream clusters to register. A boxctl public URL is this case; see
 [On boxctl.io](#on-boxctlio).
 
 ### Kubeconfig
