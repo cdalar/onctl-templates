@@ -5,13 +5,15 @@ set -ex
 # KVM-capable host to run Firecracker microVMs via `ONCTL_CLOUD=fc onctl ...`
 # without downloading anything. Run it as root on the host itself.
 #
-# On a connected machine, download these four files (<arch> is x86_64 or
-# aarch64) and copy them into one directory on the host:
+# On a connected machine, download the four files it needs and copy them
+# into one directory on the host:
 #
-#   onctl-linux-<amd64|arm64>.tar.gz  https://github.com/cdalar/onctl/releases/latest
-#   firecracker-<version>-<arch>.tgz  https://github.com/firecracker-microvm/firecracker/releases/latest
-#   vmlinux-5.10.223                  https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.10/<arch>/vmlinux-5.10.223
-#   ubuntu-22.04.ext4                 https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.10/<arch>/ubuntu-22.04.ext4
+#   ARCH=x86_64 ONCTL_ARCH=amd64     # for an ARM host: ARCH=aarch64 ONCTL_ARCH=arm64
+#   FC=v1.18.0                       # any firecracker release tag
+#   curl -fLO "https://github.com/cdalar/onctl/releases/latest/download/onctl-linux-${ONCTL_ARCH}.tar.gz"
+#   curl -fLO "https://github.com/firecracker-microvm/firecracker/releases/download/${FC}/firecracker-${FC}-${ARCH}.tgz"
+#   curl -fLO "https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.10/${ARCH}/vmlinux-5.10.223"
+#   curl -fLO "https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.10/${ARCH}/ubuntu-22.04.ext4"
 #
 # Then: sudo BUNDLE_DIR=/path/to/that/directory ./firecracker-host-setup-rhel9-airgapped.sh
 
