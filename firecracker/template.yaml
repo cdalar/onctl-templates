@@ -2,3 +2,10 @@
 description: Prepares a KVM-capable VM to host Firecracker microVMs (with IP forwarding and NAT).
 tags: [firecracker, microvm, kvm]
 entrypoint: firecracker-host-setup.sh
+files:
+  - path: firecracker-host-setup-rhel9-airgapped.sh
+    type: local
+    description: "Run as root on an air-gapped RHEL 9 host: same setup from files you downloaded beforehand, no internet needed."
+    env:
+      - name: BUNDLE_DIR
+        description: "Directory holding the downloaded onctl, firecracker, kernel and rootfs files (default: the current directory)."
