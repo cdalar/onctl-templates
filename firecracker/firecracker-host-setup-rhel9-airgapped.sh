@@ -5,17 +5,20 @@ set -ex
 # KVM-capable host to run Firecracker microVMs via `ONCTL_CLOUD=fc onctl ...`
 # without downloading anything. Run it as root on the host itself.
 #
-# On a connected machine, download the four files it needs and copy them
-# into one directory on the host:
+# On a connected machine, download the four files it needs with the commands
+# in the block below, copy them into one directory on the host, then run:
 #
-#   ARCH=x86_64 ONCTL_ARCH=amd64     # for an ARM host: ARCH=aarch64 ONCTL_ARCH=arm64
-#   FC=v1.18.0                       # any firecracker release tag
-#   curl -fLO "https://github.com/cdalar/onctl/releases/latest/download/onctl-linux-${ONCTL_ARCH}.tar.gz"
-#   curl -fLO "https://github.com/firecracker-microvm/firecracker/releases/download/${FC}/firecracker-${FC}-${ARCH}.tgz"
-#   curl -fLO "https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.10/${ARCH}/vmlinux-5.10.223"
-#   curl -fLO "https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.10/${ARCH}/ubuntu-22.04.ext4"
-#
-# Then: sudo BUNDLE_DIR=/path/to/that/directory ./firecracker-host-setup-rhel9-airgapped.sh
+#   sudo BUNDLE_DIR=/path/to/that/directory ./firecracker-host-setup-rhel9-airgapped.sh
+
+# Not executed: the download commands, kept free of comment markers so they
+# can be copied and pasted as they are. For an ARM host, replace x86_64 with
+# aarch64 and amd64 with arm64.
+: <<'DOWNLOAD_COMMANDS'
+curl -fLO https://github.com/cdalar/onctl/releases/latest/download/onctl-linux-amd64.tar.gz
+curl -fLO https://github.com/firecracker-microvm/firecracker/releases/download/v1.18.0/firecracker-v1.18.0-x86_64.tgz
+curl -fLO https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.10/x86_64/vmlinux-5.10.223
+curl -fLO https://s3.amazonaws.com/spec.ccfc.min/firecracker-ci/v1.10/x86_64/ubuntu-22.04.ext4
+DOWNLOAD_COMMANDS
 
 BUNDLE_DIR="${BUNDLE_DIR:-$PWD}"
 
